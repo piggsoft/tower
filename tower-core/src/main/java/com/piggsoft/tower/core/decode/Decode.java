@@ -1,5 +1,6 @@
-package com.piggsoft.tower.core.data;
+package com.piggsoft.tower.core.decode;
 
+import com.piggsoft.tower.core.data.DataUtils;
 import io.netty.buffer.ByteBuf;
 
 

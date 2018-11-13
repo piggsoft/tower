@@ -2,6 +2,12 @@ package com.piggsoft.tower.core.data;
 
 import io.netty.buffer.ByteBuf;
 
+/**
+ * @author piggsoft
+ * @version 1.0
+ * @create 2018/11/13
+ * @since 1.0
+ */
 public class DataUtils {
     /**
      * 延续位, 最高位为1，代表后续还有
