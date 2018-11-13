@@ -1,3 +1,0 @@
-dependencies {
-    compile 'com.101tec:zkclient:0.11'
-}
