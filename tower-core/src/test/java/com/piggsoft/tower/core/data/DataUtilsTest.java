@@ -35,4 +35,22 @@ public class DataUtilsTest {
         System.out.println(DataUtils.decodeRemainLength(heapBuf));
     }
 
+    @Test
+    public void exchange() {
+        System.out.println(Integer.toHexString(DataUtils.exchange((byte) 0xF6)));
+        System.out.println(Integer.toHexString(DataUtils.exchange((byte) 0x66)));
+        System.out.println(Integer.toHexString(DataUtils.exchange((byte) 0xF5)));
+        System.out.println(Integer.toHexString(DataUtils.exchange((byte) 0x4F)));
+    }
+
+    @Test
+    public void readVariableHeaderLength() {
+        ByteBuf heapBuf = Unpooled.buffer(8);
+        heapBuf.writeByte(0x00).writeByte(0x40);
+        System.out.println(Integer.toHexString(DataUtils.readVariableHeaderLength(heapBuf)));
+
+        heapBuf.writeByte(0xF0).writeByte(0x40);
+        System.out.println(Integer.toHexString(DataUtils.readVariableHeaderLength(heapBuf)));
+    }
+
 }

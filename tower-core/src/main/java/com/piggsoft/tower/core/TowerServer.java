@@ -1,9 +1,11 @@
 package com.piggsoft.tower.core;
 
+import com.piggsoft.tower.core.controller.Ctrl;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
@@ -12,33 +14,17 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class TowerServer {
 
     public void start(final int port) {
+
+        Context context = new Context();
+        context.init();
+
         EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // (3)
-                    .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
-                        @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ChannelHandler() {
-                                @Override
-                                public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-
-                                }
-
-                                @Override
-                                public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-
-                                }
-
-                                @Override
-                                public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-
-                                }
-                            });
-                        }
-                    })
+                    .childHandler(new Ctrl(context))
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
                     .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 

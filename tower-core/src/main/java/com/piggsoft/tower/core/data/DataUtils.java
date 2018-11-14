@@ -125,4 +125,17 @@ public class DataUtils {
         return sb.toString();
     }
 
+    /**
+     * 将一个byte的高4位和低四位进行交换
+     * @param b
+     * @return
+     */
+    public static int exchange(Byte b) {
+        return (byte) getL4Bit(b) & 0xFF | (getH4Bit(b) & 0xFF) << 4;
+    }
+
+    public static int readVariableHeaderLength(ByteBuf buf) {
+        return (buf.readByte() & 0xFF) << 8 | exchange(buf.readByte());
+    }
+
 }

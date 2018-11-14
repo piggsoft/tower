@@ -1,6 +1,7 @@
 package com.piggsoft.tower.core.controller;
 
-import com.piggsoft.tower.core.data.DataUtils;
+import com.piggsoft.tower.core.Context;
+import com.piggsoft.tower.core.data.FixedHead;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -13,13 +14,21 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  */
 public class Ctrl extends ChannelInboundHandlerAdapter {
 
+    private Context context;
+
+    public Ctrl() {}
+
+    public Ctrl(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf buf = (ByteBuf) msg;
-        byte fixedHead = buf.readByte();
-        int ctl = DataUtils.getH4Bit(fixedHead);
+        FixedHead head = FixedHead.read(buf);
 
-        int length = DataUtils.decodeRemainLength(buf);
+
+
         super.channelRead(ctx, msg);
     }
 
