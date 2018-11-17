@@ -9,7 +9,7 @@ package com.piggsoft.tower.core.data;
 public class Data {
 
     private FixedHead fixedHead;
-    private VariableHeader variableHeader;
+    private VariableHead variableHead;
     private Payload payload;
 
     public FixedHead getFixedHead() {
@@ -20,12 +20,12 @@ public class Data {
         this.fixedHead = fixedHead;
     }
 
-    public VariableHeader getVariableHeader() {
-        return variableHeader;
+    public VariableHead getVariableHead() {
+        return variableHead;
     }
 
-    public void setVariableHeader(VariableHeader variableHeader) {
-        this.variableHeader = variableHeader;
+    public void setVariableHead(VariableHead variableHead) {
+        this.variableHead = variableHead;
     }
 
     public Payload getPayload() {

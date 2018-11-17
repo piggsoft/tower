@@ -1,10 +1,6 @@
-package com.piggsoft.tower.core.decode;
+package com.piggsoft.tower.core.data;
 
-import com.piggsoft.tower.core.data.DataUtils;
-import io.netty.buffer.ByteBuf;
-
-
-public class Decode {
+public class HeadCtrlCode {
 
     public static final int HEAD_RESERVED = 0;//禁止保留
     public static final int HEAD_CONNECT = 1;//客户端到服务端客户端请求连接服务端
@@ -22,16 +18,6 @@ public class Decode {
     public static final int HEAD_PINGRESP = 13;//服务端到客户端心跳响应
     public static final int HEAD_DISCONNECT = 14;//客户端到服务端客户端断开连接
     public static final int HEAD_RESERVED_END = 15;//禁止保留
-
-
-    public void decode(ByteBuf data) {
-        byte fixedHead = data.readByte();
-        int ctl = DataUtils.getH4Bit(fixedHead);
-        data.readByte();
-        int length = DataUtils.decodeRemainLength(data);
-    }
-
-
 
 
 }

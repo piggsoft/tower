@@ -1,6 +1,6 @@
 package com.piggsoft.tower.core.data.connect;
 
-import com.piggsoft.tower.core.data.VariableHeader;
+import com.piggsoft.tower.core.data.VariableHead;
 
 /**
  * @author piggsoft
@@ -8,7 +8,7 @@ import com.piggsoft.tower.core.data.VariableHeader;
  * @create 2018/11/13
  * @since 1.0
  */
-public class ConnectionVariableHeader extends VariableHeader {
+public class ConnectionVariableHead extends VariableHead {
 
     private int msb;
     private int lsb;
@@ -21,8 +21,5 @@ public class ConnectionVariableHeader extends VariableHeader {
     private int cleanSession;
     private int reserved;
 
-    public static ConnectionVariableHeader read() {
-        return null;
-    }
 
 }

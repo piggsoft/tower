@@ -1,5 +1,6 @@
 package com.piggsoft.tower.core.data;
 
+import com.piggsoft.tower.core.exception.PacketErrorException;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -9,6 +10,7 @@ import io.netty.buffer.ByteBuf;
  * @since 1.0
  */
 public class DataUtils {
+
     /**
      * 延续位, 最高位为1，代表后续还有
      */
@@ -47,7 +49,7 @@ public class DataUtils {
      *
      * @param in
      */
-    public static int decodeRemainLength(ByteBuf in) {
+    public static int decodeRemainLength(ByteBuf in) throws PacketErrorException {
         int multiplier = 1;
         int value = 0;
         byte encodedByte;
@@ -56,7 +58,7 @@ public class DataUtils {
             value += (encodedByte & LENGTH_MAX_VALUE) * multiplier;
             multiplier *= CONTINUATION_BIT_VALUE;
             if (multiplier > CONTINUATION_BIT_VALUE * CONTINUATION_BIT_VALUE * CONTINUATION_BIT_VALUE) {
-                throw new IllegalArgumentException("错误的长度");
+                throw new PacketErrorException("wrong head length");
             }
         } while ((encodedByte & CONTINUATION_BIT_VALUE) != 0);
         return value;
@@ -127,6 +129,7 @@ public class DataUtils {
 
     /**
      * 将一个byte的高4位和低四位进行交换
+     *
      * @param b
      * @return
      */
@@ -135,7 +138,9 @@ public class DataUtils {
     }
 
     public static int readVariableHeaderLength(ByteBuf buf) {
-        return (buf.readByte() & 0xFF) << 8 | exchange(buf.readByte());
+        int h = buf.readByte() & 0xFF;
+        int l = exchange(buf.readByte());
+        return h <= 0 ? l : h;
     }
 
 }

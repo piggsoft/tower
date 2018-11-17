@@ -1,7 +1,5 @@
 package com.piggsoft.tower.core.data;
 
-import io.netty.buffer.ByteBuf;
-
 /**
  * @author piggsoft
  * @version 1.0
@@ -10,34 +8,32 @@ import io.netty.buffer.ByteBuf;
  */
 public class FixedHead {
 
-    private int ctlType;
-    private int ctlFlags;
+    private int ctrlType;
+    private int ctrlFlags;
     private int remainingLength;
 
-    public static FixedHead read(ByteBuf buf) {
-        //第一个byte
-        byte byte1 = buf.readByte();
-        FixedHead fixedHead = new FixedHead();
-        fixedHead.setCtlType(DataUtils.getH4Bit(byte1));
-        fixedHead.setCtlFlags(DataUtils.getL4Bit(byte1));
-        fixedHead.setRemainingLength(DataUtils.decodeRemainLength(buf));
-        return fixedHead;
+    public FixedHead() {}
+
+    public FixedHead(int ctrlType, int ctrlFlags, int remainingLength) {
+        this.ctrlType = ctrlType;
+        this.ctrlFlags = ctrlFlags;
+        this.remainingLength = remainingLength;
     }
 
-    public int getCtlType() {
-        return ctlType;
+    public int getCtrlType() {
+        return ctrlType;
     }
 
-    public void setCtlType(int ctlType) {
-        this.ctlType = ctlType;
+    public void setCtrlType(int ctrlType) {
+        this.ctrlType = ctrlType;
     }
 
-    public int getCtlFlags() {
-        return ctlFlags;
+    public int getCtrlFlags() {
+        return ctrlFlags;
     }
 
-    public void setCtlFlags(int ctlFlags) {
-        this.ctlFlags = ctlFlags;
+    public void setCtrlFlags(int ctrlFlags) {
+        this.ctrlFlags = ctrlFlags;
     }
 
     public int getRemainingLength() {
@@ -46,5 +42,14 @@ public class FixedHead {
 
     public void setRemainingLength(int remainingLength) {
         this.remainingLength = remainingLength;
+    }
+
+    @Override
+    public String toString() {
+        return "FixedHead{" +
+                "ctrlType=" + ctrlType +
+                ", ctrlFlags=" + ctrlFlags +
+                ", remainingLength=" + remainingLength +
+                '}';
     }
 }

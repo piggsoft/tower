@@ -2,6 +2,7 @@ package com.piggsoft.tower.core.data.connect;
 
 import com.piggsoft.tower.core.data.DataUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.CharsetUtil;
 
 public class ConnectionEvent {
 }
@@ -17,10 +18,10 @@ class VariableHeader {
     private int cleanSession;
     private int reserved;
 
-    public static ConnectionVariableHeader read(ByteBuf buf) {
+    public static ConnectionVariableHead read(ByteBuf buf) {
         VariableHeader vh = new VariableHeader();
         vh.length = DataUtils.readVariableHeaderLength(buf);
-        ByteBuf vhs = buf.readBytes(vh.length);
+        CharSequence cs = buf.readCharSequence(vh.length, CharsetUtil.UTF_8);
         return null;
     }
 }
