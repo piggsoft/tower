@@ -20,7 +20,7 @@ class VariableHeader {
 
     public static ConnectionVariableHead read(ByteBuf buf) {
         VariableHeader vh = new VariableHeader();
-        vh.length = DataUtils.readVariableHeaderLength(buf);
+        vh.length = DataUtils.readLength(buf);
         CharSequence cs = buf.readCharSequence(vh.length, CharsetUtil.UTF_8);
         return null;
     }

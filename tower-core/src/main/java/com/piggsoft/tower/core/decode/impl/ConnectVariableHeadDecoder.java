@@ -1,19 +1,15 @@
 package com.piggsoft.tower.core.decode.impl;
 
-import com.google.common.collect.ConcurrentHashMultiset;
 import com.piggsoft.tower.core.data.DataUtils;
 import com.piggsoft.tower.core.data.FixedHead;
 import com.piggsoft.tower.core.data.HeadCtrlCode;
 import com.piggsoft.tower.core.data.VariableHead;
+import com.piggsoft.tower.core.data.connect.ConnectionVariableHeadBuilder;
 import com.piggsoft.tower.core.decode.IVariableHeadDecoder;
 import com.piggsoft.tower.core.exception.PacketErrorException;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.CharsetUtil;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-
-import static com.piggsoft.tower.core.Context.CACHE;
 
 public class ConnectVariableHeadDecoder implements IVariableHeadDecoder {
 
@@ -28,49 +24,40 @@ public class ConnectVariableHeadDecoder implements IVariableHeadDecoder {
     }
 
     @Override
-    public VariableHead decode(FixedHead fixedHead, ByteBuf buf) throws Exception  {
-        int length = DataUtils.readVariableHeaderLength(buf);
-        if (PROTOCOL_NAME_LENGTH != length) {
+    public VariableHead decode(FixedHead fixedHead, ByteBuf buf) throws Exception {
 
-        }
-        CharSequence cs = buf.readCharSequence(length, CharsetUtil.UTF_8);
-        if (!PROTOCOL_NAME.equals(cs.toString())) {
+        ConnectionVariableHeadBuilder builder = ConnectionVariableHeadBuilder.create();
 
-        }
+        DataUtils.checkLength(buf, 2, "not enough length(%s) to decode protocolNameLength", 2);
+        int protocolNameLength = DataUtils.readLength(buf);
+
+        DataUtils.checkLength(buf, protocolNameLength, "not enough length(%s) to decode protocolName", protocolNameLength);
+        CharSequence protocolName = DataUtils.readData(buf, protocolNameLength);
+
+        DataUtils.checkLength(buf, 1, "not enough length(%s) to decode protocolLevel", 1);
         int protocolLevel = buf.readByte();
-        if (PROTOCOL_LEVEL != protocolLevel) {
 
-        }
+        DataUtils.checkLength(buf, 1, "not enough length(%s) to decode connectFlags", 1);
         byte connectFlags = buf.readByte();
+
+
+
+        readConnectFlags(buf.readByte(), builder);
+
 
 
 
         return null;
     }
 
-    private int[] readConnectFlags(Byte b) throws PacketErrorException, ExecutionException {
-        int[] r = new int[6];
+    private void readConnectFlags(Byte b, ConnectionVariableHeadBuilder builder) throws PacketErrorException, ExecutionException {
         //username flag
-        r[0] = (b >> 7) & 0x01;
-        //password flag
-        r[1] = (b >> 6) & 0x01;
-        //will retain
-        r[2] = (b >> 5) & 0x01;
-        //will qos
-        r[3] = (b >> 4) & 0x03;
-        //will flag
-        r[4] = (b >> 2) & 0x01;
-        //clean session
-        r[5] = (b >> 1) & 0x01;
-        int reserved = b & 0x01;
-        if (CONNECT_FLAGS_RESERVED != reserved) {
-            throw new PacketErrorException("the Connect Flags bit 0 must is 0");
-        }
-        CACHE.get("1", () -> ConcurrentHashMultiset.create());
-        return r;
-    }
-
-    public static void main(String[] args) throws PacketErrorException, ExecutionException {
-        System.out.println(Arrays.toString(new ConnectVariableHeadDecoder().readConnectFlags((byte) 0b11100110)));
+        builder.usernameFlag((b >> 7) & 0x01)
+                .passwordFlag((b >> 6) & 0x01)
+                .willRetain((b >> 5) & 0x01)
+                .willQos((b >> 4) & 0x03)
+                .willFlag((b >> 2) & 0x01)
+                .cleanSession((b >> 1) & 0x01)
+                .reserved(b & 0x01);
     }
 }

@@ -1,7 +1,11 @@
 package com.piggsoft.tower.core.data;
 
+import com.google.common.base.Verify;
 import com.piggsoft.tower.core.exception.PacketErrorException;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.CharsetUtil;
+
+import java.util.Arrays;
 
 /**
  * @author piggsoft
@@ -133,14 +137,36 @@ public class DataUtils {
      * @param b
      * @return
      */
-    public static int exchange(Byte b) {
+    public static int exchange(byte b) {
         return (byte) getL4Bit(b) & 0xFF | (getH4Bit(b) & 0xFF) << 4;
     }
 
-    public static int readVariableHeaderLength(ByteBuf buf) {
-        int h = buf.readByte() & 0xFF;
-        int l = exchange(buf.readByte());
-        return h <= 0 ? l : h;
+
+    /**
+     * 要两个字节的顺序是MSB(Most Significant Bit) LSB(Last/Least Significant Bit)，翻译成中文就是，最高有效位，最低有效位。
+     * 最高有效位在最低有效位左边/上面，表示这是一个大端字节/网络字节序，符合人的阅读习惯，高位在最左边。
+     * 但凡如此表示的，都可以视为一个16位无符号short类型整数，两个字节表示。在JAVA中处理比较简单：
+     *
+     * @param buf
+     * @return
+     */
+    public static int readLength(ByteBuf buf) {
+        return buf.readUnsignedShort();
+    }
+
+    public static void checkLength(ByteBuf buf, int length)  {
+        checkLength(buf, length, "the readable length is less then " + length);
+    }
+
+    public static void checkLength(ByteBuf buf, int length, String message, Object... args)  {
+        Verify.verify(buf.readableBytes() >= length, message, args);
+    }
+
+    public static CharSequence readData(ByteBuf buf, int length) {
+        CharSequence cs = buf.readCharSequence(length, CharsetUtil.UTF_8);
+        return cs;
     }
 
 }
+
+

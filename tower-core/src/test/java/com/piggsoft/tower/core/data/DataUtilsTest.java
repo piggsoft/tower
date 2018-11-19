@@ -1,6 +1,7 @@
 package com.piggsoft.tower.core.data;
 
 
+import com.google.common.base.Verify;
 import com.piggsoft.tower.core.exception.PacketErrorException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -50,10 +51,10 @@ public class DataUtilsTest {
         ByteBuf heapBuf = Unpooled.buffer(8);
 
         heapBuf.writeByte(0x00).writeByte(0x40);
-        System.out.println(Integer.toHexString(DataUtils.readVariableHeaderLength(heapBuf)));
+        System.out.println(Integer.toHexString(DataUtils.readLength(heapBuf)));
 
         heapBuf.writeByte(0xF0).writeByte(0x40);
-        System.out.println(Integer.toHexString(DataUtils.readVariableHeaderLength(heapBuf)));
+        System.out.println(Integer.toHexString(DataUtils.readLength(heapBuf)));
 
 
         heapBuf.clear();
@@ -79,6 +80,19 @@ public class DataUtilsTest {
 
         CharSequence cs = buf.readCharSequence(buf.readableBytes(), CharsetUtil.UTF_8);
         System.out.println(cs);
+    }
+
+    @Test
+    public void testVerify1() {
+        Verify.verify(1 == 2, "啊哈哈%s-%s", "hello", "world");
+        String[] args = new String[]{"hello", "world"};
+        Verify.verify(1 == 2, "啊哈哈%s-%s", args);
+    }
+
+    @Test
+    public void testVerify2() {
+        String[] args = new String[]{"hello", "world"};
+        Verify.verify(1 == 2, "啊哈哈%s-%s", args);
     }
 
 }
