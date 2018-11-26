@@ -2,10 +2,7 @@ package com.piggsoft.tower.core.data.connect;
 
 public class ConnectionVariableHeadBuilder {
 
-    private static final int PROTOCOL_NAME_LENGTH = 4;
-    private static final int PROTOCOL_LEVEL = 4;
-    private static final String PROTOCOL_NAME = "MQTT";
-    private static final int CONNECT_FLAGS_RESERVED = 0;
+
 
     private int protocolNameLength;
     private CharSequence protocolName;

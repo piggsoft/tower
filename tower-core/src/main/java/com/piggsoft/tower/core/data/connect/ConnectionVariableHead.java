@@ -10,6 +10,8 @@ import com.piggsoft.tower.core.data.VariableHead;
  */
 public class ConnectionVariableHead extends VariableHead {
 
+    public static int length = 10;
+
     private int protocolNameLength;
     private CharSequence protocolName;
     private int protocolLevel;
@@ -108,5 +110,10 @@ public class ConnectionVariableHead extends VariableHead {
 
     public void setReserved(int reserved) {
         this.reserved = reserved;
+    }
+
+    @Override
+    public int getLength() {
+        return length;
     }
 }

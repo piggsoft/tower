@@ -6,5 +6,8 @@ package com.piggsoft.tower.core.data;
  * @create 2018/11/13
  * @since 1.0
  */
-public class VariableHead {
+public abstract class VariableHead {
+
+    public abstract int getLength();
+
 }

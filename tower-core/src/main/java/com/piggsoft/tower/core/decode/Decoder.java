@@ -1,5 +1,6 @@
 package com.piggsoft.tower.core.decode;
 
+import com.google.common.base.Verify;
 import com.piggsoft.tower.core.data.FixedHead;
 import com.piggsoft.tower.core.data.Payload;
 import com.piggsoft.tower.core.data.VariableHead;
@@ -26,8 +27,11 @@ public class Decoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         FixedHead fixedHead = fixedHeadDecoder.decode(in);
-        VariableHead variableHead = variableHeadDecoders.get(fixedHead.getCtrlType()).decode(fixedHead, in);
-        Payload payload = payloadDecoders.get(fixedHead.getCtrlType()).decode(in);
+        Verify.verify(in.readableBytes() >= fixedHead.getRemainingLength(), "message length is less than remaining length (%s)", fixedHead.getRemainingLength());
+        ByteBuf vhBuf = in.readBytes(fixedHead.getRemainingLength());
+        VariableHead variableHead = variableHeadDecoders.get(fixedHead.getCtrlType()).decode(fixedHead, vhBuf);
+        ByteBuf plBuf = vhBuf.readBytes(fixedHead.getRemainingLength() - variableHead.getLength());
+        Payload payload = payloadDecoders.get(fixedHead.getCtrlType()).decode(plBuf);
     }
 
 }
