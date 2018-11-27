@@ -1,0 +1,6 @@
+spring:
+  tower:
+    useEpoll: true
+logging:
+  pattern:
+    console: "%d [%t] %-5p [%c{30}:%L] - %m%n"
