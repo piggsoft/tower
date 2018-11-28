@@ -22,6 +22,7 @@ public class Connect extends Protocol {
         MqttConnectVariableHeader vh = message.variableHeader();
         MqttConnectPayload payload = message.payload();
 
+
         return null;
     }
 
