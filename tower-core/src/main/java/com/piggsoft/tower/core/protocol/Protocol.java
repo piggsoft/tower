@@ -23,14 +23,14 @@ public abstract class Protocol {
     }
 
     /**
-     *
+     * 处理消息
      * @param msg
      * @return ack message
      */
     protected abstract MqttMessage doProcess(MqttMessage msg);
 
     /**
-     *
+     * 消息解码出现异常
      * @param cause
      * @return error ack message, can be null
      */

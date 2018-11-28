@@ -3,7 +3,9 @@ package com.piggsoft.tower.core.protocol;
 
 import io.netty.handler.codec.mqtt.MqttConnAckVariableHeader;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
+import io.netty.handler.codec.mqtt.MqttConnectPayload;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
+import io.netty.handler.codec.mqtt.MqttConnectVariableHeader;
 import io.netty.handler.codec.mqtt.MqttFixedHeader;
 import io.netty.handler.codec.mqtt.MqttIdentifierRejectedException;
 import io.netty.handler.codec.mqtt.MqttMessage;
@@ -17,6 +19,8 @@ public class Connect extends Protocol {
     @Override
     protected MqttMessage doProcess(MqttMessage msg) {
         MqttConnectMessage message = (MqttConnectMessage) msg;
+        MqttConnectVariableHeader vh = message.variableHeader();
+        MqttConnectPayload payload = message.payload();
 
         return null;
     }
